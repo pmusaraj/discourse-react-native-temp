@@ -7,5 +7,12 @@
           JSON.stringify({ headerBg: headerBg, buttonColor: buttonColor })
         );
       }, 500);
+
+      const container = Discourse.__container__;
+
+			const router = container.lookup("router:main");
+      router.on("routeDidChange", () => {
+        window.ReactNativeWebView.postMessage(JSON.stringify({ currentUrl: window.location.origin + router.url }));
+      });
     }
 </script>
