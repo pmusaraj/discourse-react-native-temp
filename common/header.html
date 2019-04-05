@@ -1,0 +1,11 @@
+<script type="text/discourse-plugin" version="0.8">
+    if (window.ReactNativeWebView) {
+      Ember.run.later(() => {
+        let headerBg = $(".d-header").css( "background-color" );
+        let buttonColor = $(".d-header svg.d-icon").css( "color" );
+        window.ReactNativeWebView.postMessage(
+          JSON.stringify({ headerBg: headerBg, buttonColor: buttonColor })
+        );
+      }, 500);
+    }
+</script>
