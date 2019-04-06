@@ -3,16 +3,47 @@
       Ember.run.later(() => {
         let headerBg = $(".d-header").css( "background-color" );
         let buttonColor = $(".d-header svg.d-icon").css( "color" );
+        let headerShadow = $(".d-header").css( "box-shadow" );
+        let headerShadowColor = headerShadow.match(/rgba*\((.*)\)/i);
+
         window.ReactNativeWebView.postMessage(
-          JSON.stringify({ headerBg: headerBg, buttonColor: buttonColor })
+          JSON.stringify({ headerBg: headerBg, buttonColor: buttonColor, headerShadowColor: headerShadowColor[0] })
         );
       }, 500);
 
+      // router
       const container = Discourse.__container__;
 
 			const router = container.lookup("router:main");
       router.on("routeDidChange", () => {
         window.ReactNativeWebView.postMessage(JSON.stringify({ currentUrl: window.location.origin + router.url }));
       });
+
+      // scrolling
+      var mobileLastScroll = 0;
+
+      function webviewScrollDirectionCheck() {
+        let offset = $(window).scrollTop();
+        const delta = Math.floor(offset - mobileLastScroll);
+
+        if (delta <= 20 && delta >= -20)
+          return true;
+
+        let currDirection = delta > 0 ? 'down' : 'up';
+        if (offset < 50) currDirection = 'up';
+
+         if(offset + $(window).height() >= $(document).height() - 100) {
+            currDirection = 'up'
+         }
+
+        window.ReactNativeWebView.postMessage(JSON.stringify({scrollDirection: currDirection, docH: $(document).height(), sTop: $(window).scrollTop(), winH: $(window).height()}));
+        mobileLastScroll = Math.floor(offset);
+      }
+
+      const onScroll = () => {
+        Ember.run.throttle(this, webviewScrollDirectionCheck, 500);
+      };
+
+      $(window).on('scroll', onScroll);
     }
 </script>
