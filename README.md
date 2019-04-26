@@ -1,3 +1,3 @@
 # discourse-react-native-temp
 
-Oy!
+This repo will disappear shortly. 
