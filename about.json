@@ -4,6 +4,6 @@
 	"license_url": null,
 	"component": true,
 	"assets": {
-		"ppu": "assets/ppu.png"
+		"ptest": "assets/ppu.png"
 	}
 }
